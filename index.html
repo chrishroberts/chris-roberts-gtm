@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>A Go-To-Market Thesis</title>
+<meta name="description" content="A working point of view on coverage, signals and agents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17211E;
+  --paper:#F7F5F1;
+  --stone:#C9C4BA;
+  --slate:#4A5854;
+  --blood:#7A2B34;
+  --rule:rgba(23,33,30,.14);
+  --panel:#FFFFFF;
+  --measure:64ch;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#EDE9E2;
+    --paper:#121917;
+    --stone:#3A4643;
+    --slate:#A8B3AF;
+    --blood:#C98089;
+    --rule:rgba(237,233,226,.16);
+    --panel:#18211F;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#EDE9E2; --paper:#121917; --stone:#3A4643; --slate:#A8B3AF;
+  --blood:#C98089; --rule:rgba(237,233,226,.16); --panel:#18211F;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.62;
+  font-weight:400;letter-spacing:.002em;
+}
+img{max-width:100%;display:block}
+a{color:var(--blood)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--blood);outline-offset:3px;border-radius:2px}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--blood);z-index:60}
+header.top{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:1px solid var(--rule);
+}
+.topin{
+  max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.mark{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--ink)}
+.mark .glyph{width:44px;height:16px;flex:none}
+.mark .word{
+  font-family:var(--serif);font-weight:600;font-size:1.05rem;
+  letter-spacing:-.02em;line-height:1;
+}
+.mark .sub{
+  font-size:.72rem;color:var(--slate);letter-spacing:.05em;white-space:nowrap;
+  padding-left:.7rem;margin-left:.25rem;border-left:1px solid var(--rule);
+}
+.mark .word{white-space:nowrap}
+nav.desk{display:flex;gap:1.5rem;align-items:center;flex:none}
+nav.desk a{
+  text-decoration:none;color:var(--slate);font-size:.83rem;font-weight:500;
+  padding-bottom:2px;border-bottom:1px solid transparent;white-space:nowrap;
+}
+nav.desk a:hover{color:var(--ink);border-bottom-color:var(--blood)}
+#burger{
+  display:none;background:none;border:1px solid var(--rule);border-radius:3px;
+  padding:.45rem .55rem;cursor:pointer;color:var(--ink);
+}
+#burger span{display:block;width:18px;height:1.5px;background:var(--ink);margin:3.5px 0}
+#drop{display:none;border-top:1px solid var(--rule);background:var(--paper)}
+#drop.open{display:block}
+#drop a{
+  display:block;padding:.8rem 1.25rem;text-decoration:none;color:var(--ink);
+  font-size:.95rem;border-bottom:1px solid var(--rule);
+}
+@media (max-width:1040px){
+  nav.desk{display:none}
+  #burger{display:block}
+}
+@media (max-width:560px){
+  .mark .sub{display:none}
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
+.spine{
+  border-left:1px solid var(--rule);padding-left:2.6rem;margin-left:1.5rem;
+}
+@media (max-width:880px){.spine{border-left:none;padding-left:0;margin-left:0}}
+section{padding:2.9rem 0 .6rem;scroll-margin-top:84px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.022em;line-height:1.12;margin:0}
+h1{font-size:clamp(2.1rem,5.6vw,3.5rem)}
+h2{font-size:clamp(1.5rem,3.2vw,2.05rem);margin-bottom:1.1rem}
+h3{font-size:1.06rem;letter-spacing:-.01em;margin-bottom:.4rem}
+p{max-width:var(--measure);margin:0 0 .9rem}
+.lead{font-size:1.1rem;color:var(--slate);max-width:60ch}
+strong{font-weight:600}
+.hero{padding:3.6rem 0 2.4rem;border-bottom:1px solid var(--rule)}
+.kicker{
+  font-family:var(--sans);font-size:.78rem;color:var(--slate);
+  letter-spacing:.08em;margin-bottom:1.6rem;
+}
+.hero h1{max-width:19ch}
+.hero .quote{
+  margin:2.2rem 0 0;padding-left:1.3rem;border-left:2px solid var(--blood);
+  max-width:56ch;
+}
+.hero .quote p{font-size:1.06rem;margin-bottom:.4rem}
+.hero .quote cite{font-style:normal;font-size:.82rem;color:var(--slate)}
+.figure{
+  margin:2.4rem 0;padding:1.6rem;background:var(--panel);
+  border:1px solid var(--rule);border-radius:4px;overflow-x:auto;
+}
+.figure svg{min-width:520px;width:100%;height:auto}
+.figcap{font-size:.86rem;color:var(--slate);margin:1rem 0 0;max-width:none;line-height:1.55}
+.claim{
+  font-family:var(--serif);font-size:clamp(1.3rem,2.7vw,1.7rem);
+  line-height:1.3;max-width:40ch;margin:2rem 0;color:var(--ink);
+}
+.rows{border-top:1px solid var(--rule);margin:1.8rem 0 0}
+.row{
+  display:grid;grid-template-columns:8.5rem 1fr;gap:1.6rem;
+  padding:.95rem 0;border-bottom:1px solid var(--rule);align-items:start;
+}
+.row .tag{font-size:.82rem;color:var(--blood);font-weight:600;line-height:1.45}
+.row p{margin:0;font-size:.97rem}
+@media (max-width:640px){
+  .row{grid-template-columns:1fr;gap:.35rem}
+}
+.steps{counter-reset:s;margin:1.8rem 0 0;padding:0;list-style:none}
+.steps li{
+  counter-increment:s;position:relative;padding:0 0 1.3rem 3rem;
+  border-left:1px solid var(--rule);margin-left:.7rem;
+}
+.steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps li::before{
+  content:counter(s);position:absolute;left:-.72rem;top:0;
+  width:1.45rem;height:1.45rem;border-radius:50%;
+  background:var(--paper);border:1px solid var(--blood);color:var(--blood);
+  font-size:.74rem;font-weight:600;display:grid;place-items:center;
+}
+.steps h3{margin-bottom:.25rem}
+.steps p{margin:0;font-size:.97rem;color:var(--slate)}
+.open{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:1.6rem 1.7rem;margin-top:1.6rem}
+.open ul{margin:0;padding-left:1.1rem}
+.open li{margin-bottom:.55rem;font-size:.97rem;max-width:60ch}
+.open li:last-child{margin-bottom:0}
+footer{margin-top:4.5rem;border-top:1px solid var(--rule);padding:2.6rem 0 3rem}
+.by{display:flex;align-items:center;gap:1rem;margin-bottom:1.6rem}
+.by img{width:52px;height:52px;border-radius:50%;flex:none;filter:grayscale(1)}
+.by .n{font-family:var(--serif);font-weight:600;font-size:1rem;line-height:1.3}
+.by .r{font-size:.84rem;color:var(--slate);line-height:1.4}
+.disc{font-size:.76rem;color:var(--slate);max-width:72ch;line-height:1.6}
+.tldr{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.6rem 0 1.4rem;margin:0}
+.tldr h2{font-size:1.12rem;margin-bottom:1rem;letter-spacing:.01em}
+.tldr ol{margin:0;padding:0;list-style:none;counter-reset:t}
+.tldr li{counter-increment:t;position:relative;padding:.42rem 0 .42rem 2.1rem;max-width:72ch;font-size:1rem;line-height:1.5}
+.tldr li::before{content:counter(t);position:absolute;left:0;top:.52rem;font-size:.72rem;color:var(--blood);font-weight:600;font-family:var(--sans)}
+.tldr a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+.tldr a:hover{border-bottom-color:var(--blood)}
+details.more{margin:1.2rem 0 0;border-top:1px solid var(--rule)}
+details.more>summary{
+  cursor:pointer;list-style:none;padding:.7rem 0;font-size:.82rem;color:var(--blood);
+  font-weight:600;letter-spacing:.01em;
+}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::after{content:" +";}
+details.more[open]>summary::after{content:" −";}
+details.more>summary:hover{opacity:.75}
+details.more .rows{margin-top:0;border-top:none}
+.reveal{opacity:0;transition:opacity .7s ease}
+.reveal.in{opacity:1}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transition:none}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header class="top">
+  <div class="topin">
+    <a class="mark" href="#top">
+      <svg class="glyph" viewBox="0 0 44 16" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" fill="#E8843C"/>
+        <circle cx="22" cy="8" r="7" fill="#7A5AA8"/>
+        <circle cx="36" cy="8" r="7" fill="#4FBFA0"/>
+      </svg>
+      <span class="word">Go-to-market thesis</span>
+      <span class="sub">Chris Roberts</span>
+    </a>
+    <nav class="desk">
+      <a href="#premise">Premise</a>
+      <a href="#stack">What you sell</a>
+      <a href="#universe">Coverage</a>
+      <a href="#system">The system</a>
+      <a href="#grounding">Grounding layer</a>
+      <a href="#ninety">First ninety</a>
+    </nav>
+    <button id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drop">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div id="drop">
+    <a href="#premise">Premise</a>
+    <a href="#stack">What you sell</a>
+    <a href="#universe">Coverage</a>
+    <a href="#signals">Signals</a>
+    <a href="#brief">Account brief</a>
+    <a href="#agents">Agents</a>
+    <a href="#system">The system</a>
+    <a href="#partners">Channel</a>
+    <a href="#grounding">Grounding layer</a>
+    <a href="#completion">Completion</a>
+    <a href="#surface">The front door</a>
+    <a href="#marketing">Marketing</a>
+    <a href="#ninety">First ninety</a>
+    <a href="#team">The team</a>
+    <a href="#open">Open</a>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap">
+
+  <div class="hero reveal">
+    <p class="kicker">Written after our first conversation, refined after the second. Working draft, not a pitch.</p>
+    <h1>You already said the data is the constraint. The go-to-market is the same problem.</h1>
+    <div class="quote">
+      <p>AI is only as powerful as the data behind it. The firms that prioritize better data today will make better decisions tomorrow.</p>
+      <cite>James Bateman, Grow Your Law Firm, episode 347</cite>
+    </div>
+  </div>
+  <div class="tldr reveal">
+    <h2>The short version</h2>
+    <ol>
+      <li><a href="#stack">The products are how you land. The infrastructure is what you sell.</a> The motion has been selling SettLiT. The business is the layer underneath it.</li>
+      <li><a href="#grounding">Everyone in this category ingests medical records. Nobody obtains them.</a> That gap is the whole position, and it is worth more than pre-qualification.</li>
+      <li><a href="#universe">Your buyer universe is a list, not a funnel.</a> A few hundred firms, each with an owner, a state and the roles that have to be reached. The board measures coverage and penetration, not dials.</li>
+      <li><a href="#signals">Signals replace the call quota.</a> New MDL filings, docket movement, advertising spend, operational hiring. The reason to call should arrive, not be invented.</li>
+      <li><a href="#agents">Agents do the preparation. People do the conversation.</a> The two to four hours of research behind every good account brief is the part to hand over.</li>
+      <li><a href="#system">The team should never log into the CRM.</a> Put Claude natively in Slack, let agents propose the record update, and let people approve it in the thread they were already in.</li>
+      <li><a href="#marketing">Marketing and sales on one system, measured on account engagement and sourced pipeline.</a> Not MQLs. And read together, campaign engagement against rep activity per firm tells you in real time whether a gap is a sales problem or a marketing one.</li>
+      <li><a href="#marketing">Events are already your biggest channel, and mostly unowned data.</a> Prepare on what you can actually get, expect to book on site, standardize capture, and use the fact that events attribute more cleanly than anything else you run.</li>
+      <li><a href="#team">Infrastructure before headcount.</a> A second rep doubles the activity. The system multiplies every rep you ever hire.</li>
+      <li><a href="#marketing">Async demos do double duty.</a> A partner will watch four minutes about their own firm without booking a call, and the forward tells you who else is in the buying group.</li>
+      <li><a href="#open">What I do not know is marked as such.</a> Revenue split, financing, why the last attempt did not work, and real completion rates.</li>
+    </ol>
+  </div>
+
+  <div class="spine">
+
+  <section id="premise" class="reveal">
+    <h2>The premise</h2>
+    <p>That line is the whole thesis of the company, and it is also the thesis of how the company should sell. A firm making intake decisions on incomplete information is destroying capital. A revenue team running on call volume is doing the same thing with its own time.</p>
+    <p>Both are the same failure: acting without the data that would have made the decision obvious. You have built the fix for one of them. The argument below is that the other one is fixable with the same logic.</p>
+    <p class="claim">Contingency firms front their own costs. Every bad case accepted at intake is capital burned, and every deposition surprise is money and credibility gone at once.</p>
+    <p>That is not an efficiency story. It is capital allocation, told to an owner-operator who eats what he kills. It is also, I suspect, the sentence a sales leader trained on enterprise software would never think to say.</p>
+    <p>One correction I would make to how this market usually gets described. Pure contingency is the sharpest version of the economics, but a large share of the firms that need this run partial contingency: employment, medical malpractice, disability and insurance claims, class action. Hourly on some files, contingent on others, costs partly advanced and partly recovered. Every one of them runs on protected information they cannot obtain cleanly, and their economics make the argument differently rather than weaker. That widens the universe well beyond mass tort, and it is worth deciding deliberately rather than by default whether those firms are in scope.</p>
+  </section>
+
+  <section id="stack" class="reveal">
+    <h2>The products are how you land. The infrastructure is what you sell.</h2>
+    <p>You have been clear that SettLiT and Medchart are vertical products and Marble is the business. That distinction should show up in the motion, and my read is that it has not.</p>
+    <div class="figure">
+      <svg viewBox="0 0 720 250" role="img" aria-label="Diagram: vertical products sit above a shared authorization layer">
+        <g font-family="Archivo, Arial, sans-serif" font-size="12.5">
+          <rect x="16" y="18" width="216" height="66" rx="4" fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2"/>
+          <text x="34" y="44" fill="currentColor" font-weight="600" font-size="13.5">SettLiT</text>
+          <text x="34" y="63" fill="currentColor" fill-opacity=".62">US mass tort and plaintiff</text>
+          <rect x="252" y="18" width="216" height="66" rx="4" fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2"/>
+          <text x="270" y="44" fill="currentColor" font-weight="600" font-size="13.5">Medchart</text>
+          <text x="270" y="63" fill="currentColor" fill-opacity=".62">Canadian legal and insurance</text>
+          <rect x="488" y="18" width="216" height="66" rx="4" fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2"/>
+          <text x="506" y="44" fill="currentColor" font-weight="600" font-size="13.5">Marble API</text>
+          <text x="506" y="63" fill="currentColor" fill-opacity=".62">Direct platform access</text>
+          <path d="M124 84 L124 126 M360 84 L360 126 M596 84 L596 126" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2" stroke-dasharray="3 4"/>
+          <rect x="16" y="130" width="688" height="100" rx="4" fill="currentColor" fill-opacity=".05" stroke="currentColor" stroke-opacity=".75" stroke-width="1.6"/>
+          <text x="40" y="166" fill="currentColor" font-weight="600" font-size="15.5">The authorization layer</text>
+          <text x="40" y="190" fill="currentColor" fill-opacity=".62">One layer.</text>
+          <text x="40" y="209" fill="currentColor" fill-opacity=".62">Many products on top.</text>
+          <path d="M300 152 L300 208" stroke="currentColor" stroke-opacity=".25" stroke-width="1"/>
+          <text x="330" y="162" fill="currentColor" fill-opacity=".78" font-weight="500">Consent · identity · verification</text>
+          <text x="330" y="186" fill="currentColor" fill-opacity=".78" font-weight="500">Retrieval · structure · provenance · audit</text>
+          <text x="330" y="210" fill="currentColor" fill-opacity=".62">Health · financial · criminal · education</text>
+        </g>
+      </svg>
+      <p class="figcap">Land where the pain is acute and one person can say yes. Expand into the layer underneath, where the firm's own clients are onboarded and the value compounds.</p>
+    </div>
+    <p>Sold as a product, SettLiT is a pre-qualification tool with a ceiling. Sold as the entry point to the layer, it is the first contract in a relationship that eventually runs underneath the firm's whole file lifecycle. Same first sale, different second year.</p>
+    <p>A motion built around the product alone will always default to volume, because a product with a fixed price and a single use case gives a rep nothing else to do but dial. That, I think, is how this ended up being a call-count business.</p>
+  </section>
+
+  <section id="universe" class="reveal">
+    <h2>Your buyer universe is a list, not a funnel</h2>
+    <p>The firms in the United States that matter to this business are countable. Mass tort and plaintiff firms with the case volume, the docket participation and the intake throughput to justify the spend are a few hundred organizations, not a market you prospect blind. Add the partial contingency practices above and the list grows, but it stays a list.</p>
+    <p class="claim">You do not dial a list. You cover it.</p>
+    <p>Coverage is a specific thing, not a slogan. Every firm on the list has an owner, a state and a set of roles that have to be reached. The states run from not yet worked, to researched, to contacted, to engaged, to in cycle, to decided, and decided includes no. Coverage is the share of the list that has moved past each state. Penetration is the share of required roles actually reached at each firm.</p>
+    <p>One correction to how this usually gets imported from enterprise software. The standard research puts a B2B buying group at well over a dozen people, and that is not your buyer. A contingency firm is three to five: the managing partner, whoever runs intake or case management, an operations or finance lead, and sometimes IT. The discipline transfers. The number does not, and a motion built for a committee of thirteen will feel absurd to a managing partner who decides things himself.</p>
+    <p>The economics are different too, and this is the part most vendors miss. A law firm is a partnership that distributes profit at year end. Software is not a line item absorbed by a budget, it is a direct reduction of what every partner takes home. That is why cost per case lands and platform pricing does not, and it is worth saying out loud in the room.</p>
+    <p>Worth watching: private equity is moving into plaintiff firms through management service organizations that centralize marketing, finance and technology. As that consolidates, buying professionalizes and the group gets bigger. The model should be able to handle both shapes.</p>
+    <p>That is what goes on the board, and it is a different measurement from activity. A rep can make sixty dials in a day and cover four firms. Another can cover forty firms in a week with a dozen calls, three conversations at a conference and two warm introductions. Dials count effort against a population nobody defined. Coverage counts whether each named firm has been worked to a conclusion by someone accountable for it.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Define</div><p>Build the actual named universe: firm size, practice area, case volume, active MDL participation, intake throughput, current retrieval spend and cycle time. Most of this is public or semi-public.</p></div>
+      <div class="row"><div class="tag">Tier</div><p>Rank by fit and reachable value, not by who answered the phone. Tier one gets a bespoke brief. Tier two gets a templated play. Tier three gets nurture until a signal fires.</p></div>
+      <div class="row"><div class="tag">Assign</div><p>Every named firm has an owner and a state. Nothing sits unowned, and nothing is worked twice by accident.</p></div>
+      <div class="row"><div class="tag">Measure</div><p>Coverage, penetration and progression through the named list. Activity is an input you diagnose with, never the number you report.</p></div>
+    </div>
+  </section>
+  <section id="signals" class="reveal">
+    <h2>What replaces the call quota</h2>
+    <p>Reps should not be inventing reasons to reach out. The reason should arrive. A signal model watches the named list and produces a dated, specific trigger tied to that firm's own business.</p>
+    <details class="more"><summary>Show the signal set</summary>
+    <div class="rows">
+      <div class="row"><div class="tag">New MDL filings</div><p>A firm joining a new multidistrict litigation is about to take on claimant volume it has to qualify fast. That is the moment pre-qualification is worth the most.</p></div>
+      <div class="row"><div class="tag">Docket movement</div><p>Case load shifts, new filings, bellwether scheduling. Each one changes the firm's near-term record burden.</p></div>
+      <div class="row"><div class="tag">Advertising spend</div><p>A spike in acquisition spend means intake volume is about to rise. Intake volume without qualification capacity is where bad cases enter the book.</p></div>
+      <div class="row"><div class="tag">Operational hiring</div><p>Case managers, intake coordinators, records clerks. Headcount added to a manual process is the clearest signal that the process is breaking.</p></div>
+      <div class="row"><div class="tag">Expansion</div><p>New offices, new practice areas, new state registrations. Growth forces firms to re-examine the back office they had been tolerating.</p></div>
+    </div>
+    </details>
+    <p style="margin-top:1.8rem">None of these require the rep to guess. They require a system that watches and a rep who knows what to do when it fires.</p>
+  </section>
+
+  <section id="brief" class="reveal">
+    <h2>What one account looks like</h2>
+    <p>This is the artifact the motion produces. Not a call script and not a deck. A short, specific read on one firm, assembled before anyone picks up a phone.</p>
+    <details class="more"><summary>Show what a brief contains</summary>
+    <div class="rows">
+      <div class="row"><div class="tag">Their position</div><p>Practice areas, case volume, the MDLs they are in, the intake throughput they are running, roughly what they are spending on record retrieval and how long it takes them.</p></div>
+      <div class="row"><div class="tag">Their exposure</div><p>Where incomplete information is most likely costing them: cases accepted that should not have been, prior providers not surfaced, gaps in care found by the defense first.</p></div>
+      <div class="row"><div class="tag">The arithmetic</div><p>Cycle time and staff hours today against the same file with structured data at intake. Expressed per case, because that is the unit the managing partner thinks in.</p></div>
+      <div class="row"><div class="tag">The path</div><p>Start at pre-qualification. Then their clients onboarded onto consent and identity. Then the layer running underneath the whole file.</p></div>
+      <div class="row"><div class="tag">The ask</div><p>One specific next step, sized to the decision that one person can actually make in one conversation.</p></div>
+    </div>
+    </details>
+    <p style="margin-top:1.8rem">A managing partner will read that in ninety seconds and know whether it is worth their time. That is the correct standard, because they have no procurement function to hide behind and no patience for the alternative.</p>
+  </section>
+
+  <section id="agents" class="reveal">
+    <h2>Where the agents actually sit</h2>
+    <p>Agentic is not a selling style. It is a decision about which parts of the week a person should stop doing.</p>
+    <p>The brief above takes a competent rep somewhere between two and four hours to assemble by hand, which is why it never gets assembled. Nearly all of that work is retrieval, structuring and synthesis of public information against a known template. That is the part to hand over.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Watch</div><p>Monitor dockets, filings, hiring and spend across the named list. Surface the trigger with its evidence attached.</p></div>
+      <div class="row"><div class="tag">Assemble</div><p>Draft the account brief from the firm's own public footprint, in the standard format, ready for a human to correct rather than write.</p></div>
+      <div class="row"><div class="tag">Personalize</div><p>Produce the outreach grounded in that firm's docket and economics, not in a template with a merge field.</p></div>
+      <div class="row"><div class="tag">Maintain</div><p>Keep the named list current. Firms merge, practice areas shift, MDLs resolve. A stale list quietly becomes a funnel again.</p></div>
+    </div>
+    <p style="margin-top:1.8rem">What does not get handed over is the conversation, the judgment about which firms deserve the effort, and the relationship with a partner who is deciding whether to trust you with their clients' protected information. The agents buy back the preparation so the humans can spend all of their time on the part that is actually hard.</p>
+  </section>
+  <section id="system" class="reveal">
+    <h2>The system I would build, and what runs on it</h2>
+    <p>You said there is budget set aside for this, which changes the conversation from whether to what. The thing worth being disciplined about is that a commercial team does not need a technology strategy. It needs an operating system, and the tools are just what runs on it.</p>
+    <p>You have already proven the hard part internally. An environment where anyone can build and ship to production with a governance pipeline in front of it is further than most companies ten times your size have got. What follows is that same posture applied to the revenue side, in four layers, with the honest note that you know what is already installed and I do not.</p>
+
+    <h3 style="margin-top:2.2rem">1. The record layer, where truth lives</h3>
+    <p>The CRM holds opportunities. It should also hold the named universe as a first-class object, with tiering, ownership, coverage state and the firmographic and docket data that justified the tier. Most revenue teams keep the account list in a spreadsheet and the system of record ends up describing only what already happened.</p>
+    <p>The asset nobody else has is your own product telemetry. Consent completion rates, time to first record, retrieval success by provider, all of it per firm. That data belongs in the commercial record, not only in the application. It is what makes expansion predictable rather than hopeful.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Keep</div><p>Whatever CRM is in place. Replacing it buys nothing at this stage and costs a quarter.</p></div>
+      <div class="row"><div class="tag">Add, thinly</div><p>An enrichment layer for the commodity data: firm contacts, basic firmographics, standard buying signals. Clay is the flexible option and needs an owner to maintain it, which is a real cost at your size. Floqer is the managed alternative that builds the workflows for you, with the tradeoff of a much smaller company behind it. The choice depends on whether you want to own the workflows or rent them, and I would not decide it without seeing what is already installed.</p></div>
+      <div class="row"><div class="tag">Build, not buy</div><p>The part that matters is not in either of their provider networks. Enrichment platforms aggregate funding rounds, hiring, tech stack and software intent. Your signal model is MDL filings, docket movement, bellwether scheduling, legal advertising spend and bar registrations. Nobody sells that as a feed, which is precisely why it is worth building, and why building it makes the research layer proprietary rather than rented.</p></div>
+      <div class="row"><div class="tag">Resist</div><p>A warehouse or lakehouse. You do not have a data scale problem, you have a data structure problem, and buying Snowflake or Databricks to solve it would be theatre.</p></div>
+    </div>
+
+    <h3 style="margin-top:2.4rem">2. The work layer, and the thing I would actually build here</h3>
+    <p>From the outside it looks like the team is in Slack every day and using Claude every day, and that those are two different places. If that is right, closing the gap between them is the first thing I would do, and it is smaller than it sounds.</p>
+    <p>Put Claude natively in Slack, where it can be tagged in a thread like a colleague rather than opened in another tab. The difference is not convenience, it is usage. When someone has to leave the conversation, re-explain the background, copy the context across and come back with the answer, they mostly do not bother. When they can tag it mid-thread, they do. The bottleneck on getting value out of these models is almost never the model. It is the distance between the moment a need appears and the moment someone actually asks.</p>
+    <p>That one change is also the foundation for everything below, because it makes the commitment possible.</p>
+    <p class="claim">The sales team should never log into the CRM. Not rarely. Never.</p>
+    <p>The CRM stops being a place people go and becomes a database that gets written to. Every piece of a rep's day happens in the channel: the signal fires there, the account brief arrives there, the call summary posts there, the record update is proposed there and confirmed with a word. An agent writes to the system of record and the human approves it in the thread they were already in.</p>
+    <p>This is not a convenience argument. It is a data quality argument that happens to also be an adoption argument. Every CRM hygiene problem in the industry traces back to the same root cause, which is that updating the record is a separate act from doing the work, performed later, by a tired person, from memory. Remove the separate act and the data gets better on its own. No enablement programme has ever achieved that. Removing the login does it in a week.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Signals arrive</div><p>A firm joins a new MDL. The trigger posts to the channel with its evidence and the account owner tagged.</p></div>
+      <div class="row"><div class="tag">Briefs assemble</div><p>The rep asks for the account brief in-thread. It comes back in the standard format, ready to correct rather than write.</p></div>
+      <div class="row"><div class="tag">Calls write themselves</div><p>Capture runs on the call. Summary, next steps and proposed record changes post to the channel. The rep says yes, or edits the one field that is wrong.</p></div>
+      <div class="row"><div class="tag">Pipeline lives in-channel</div><p>Coverage, progression and completion rollups generated on a cadence and reviewed where the team already talks, rather than assembled by hand the night before a forecast call.</p></div>
+      <div class="row"><div class="tag">The record stays clean</div><p>Because nobody is being asked to maintain it. It is a by-product of the work rather than a tax on it.</p></div>
+    </div>
+    <p style="margin-top:1.8rem">You are already running Claude internally, and you have already built the harder half of this: an environment where people can ship with a governance pipeline in front of them. This is the same posture pointed at accounts instead of code. The agent proposes, the human approves, the write is logged and auditable.</p>
+    <p>The reason to do it here specifically is that you can. A fifty-person company can operate this way from the start. A five-thousand-person company cannot get there, because it has a decade of custom objects, a CRM admin team whose job is adoption, and a forecast process that assumes people fill in fields. They will talk about this for years and ship a chatbot beside the CRM. You could simply run this way and never build the habit you would otherwise have to break.</p>
+    <p>The honest conditions: the schema has to stay simple enough that an agent can write to it correctly, every write needs to be logged and reversible, and somebody has to own the exceptions the agent gets wrong. Those are real, and they are all cheaper than the alternative.</p>
+    <h3 style="margin-top:2.4rem">3. The agent layer, what does the work</h3>
+    <details class="more"><summary>Show the agent set</summary>
+    <div class="rows">
+      <div class="row"><div class="tag">Account research</div><p>The brief described earlier, assembled from the firm's public footprint. This is the one I would build rather than buy, because it runs on a template only you would write and on data only you have.</p></div>
+      <div class="row"><div class="tag">Signal monitoring</div><p>Dockets, filings, hiring and advertising spend watched across the named list, with the trigger delivered into the work surface and its evidence attached.</p></div>
+      <div class="row"><div class="tag">Conversation capture</div><p>Otter, Fathom or Granola on every call, with summaries and next steps written back to the record automatically. Reps should never be the bottleneck on CRM hygiene, because they always will be.</p></div>
+      <div class="row"><div class="tag">Campaign execution</div><p>Agents operating inside the marketing platform rather than beside it, assembling audiences, content and journeys against the named list and a marketer-defined goal. Salesforce's Campaign Agent and HubSpot's Breeze agents are the same idea at different altitudes. Use whichever platform is already in place. Migrating to get one is a vendor decision, not a strategy.</p></div>
+      <div class="row"><div class="tag">Inbound intake</div><p>An agent on the website qualifying and routing inbound firms, then handing to a human with context already gathered. Sales and service agents are commodity now, and this is a buy rather than a build.</p></div>
+      <div class="row"><div class="tag">Proposal and brief drafting</div><p>First drafts of the account brief, the ROI arithmetic and the follow-up, produced from the record. Humans correct rather than compose.</p></div>
+    </div>
+    </details>
+
+    <h3 style="margin-top:2.4rem">4. The engagement layer, which has two audiences</h3>
+    <p>This is the one most revenue teams get wrong, because they only count one audience. The firm's staff are the users you sell to. The firm's clients are the users who have to complete consent and identity verification, and they never appear in a sales dashboard.</p>
+    <p>Both belong to whoever owns revenue. The second one is where renewal is actually decided, for the reason set out further down this page.</p>
+  </section>
+
+  <section id="partners" class="reveal">
+    <h2>Where the channel actually is</h2>
+    <p>The highest-leverage distribution for this business is not another rep. It is being inside the software plaintiff firms already run their cases in.</p>
+    <details class="more"><summary>Show the channel and competitive read</summary>
+    <div class="rows">
+      <div class="row"><div class="tag">Case management</div><p>Filevine, Litify, CASEpeer and Clio are where the file lives. An integration that pulls structured health data into the case record at intake puts Marble in front of the buyer at the exact moment of the decision, without a call.</p></div>
+      <div class="row"><div class="tag">A specific wedge</div><p>Litify is built natively on the Salesforce platform. I spent twelve years inside that platform and its partner ecosystem, which makes that a conversation I can open rather than one I would have to learn my way into.</p></div>
+      <div class="row"><div class="tag">Corporate legal AI</div><p>Harvey and Legora will move down-market, because the AmLaw tier does not support their valuations. But down-market for them means mid-market corporate and transactional firms, not contingency plaintiff work, and their products are built for hours saved against a billable rate. Interesting for Medchart's Canadian legal and insurance side. Not where I would spend early partnership effort.</p></div>
+      <div class="row"><div class="tag">Clio specifically</div><p>Worth confirming your own read, but I see Clio as a channel rather than a competitor. They run the practice. They do not own consent, identity or retrieval, which is the part you would be supplying.</p></div>
+    </div>
+    </details>
+    <h3 style="margin-top:2.6rem">The competitive question, answered honestly</h3>
+    <p>The threat to this business was never going to arrive from corporate legal AI moving down a tier. It is already in your market and it is extremely well capitalized. EvenUp is past a two billion dollar valuation on roughly 385 million raised. Eve crossed a billion and is the adoption leader with well over a thousand firms. Supio raised sixty million and is building a single agentic system spanning intake to verdict for plaintiff and mass tort work, with medical record intelligence and a Thomson Reuters connection. Filevine acquired Parrot outright.</p>
+    <p class="claim">Every one of them ingests medical records. Not one of them obtains them.</p>
+    <p>That gap is your position, and it cuts in two directions at once.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">The partnership</div><p>You supply consented, structured, provenance-tracked records into their platforms. Their output is only as defensible as the records underneath it, and in this category compliance claims are largely vendor-stated. You are the layer that makes those claims verifiable rather than asserted.</p></div>
+      <div class="row"><div class="tag">The risk</div><p>Any of them can build or buy retrieval and consent and come upstream. EvenUp has the balance sheet to acquire it. This is the real competitive clock, and it argues for moving on integration partnerships before someone decides to own the layer instead of licensing it.</p></div>
+      <div class="row"><div class="tag">The pricing edge</div><p>These tools are sold per matter, per case or per seat, and they stack expensively against firms that front every cost and only get paid on wins. Infrastructure priced against case economics is an argument only the layer underneath can make.</p></div>
+    </div>
+    <p style="margin-top:1.8rem">The general principle: buy the commodity, build the proprietary. Call capture, intake agents and enrichment are bought. The account brief engine and anything that runs on your own consent and completion data is built, because that is the part no competitor can copy and the part that compounds.</p>
+  </section>
+
+  <section id="grounding" class="reveal">
+    <h2>The argument I would make that nobody else is making</h2>
+    <p>Every plaintiff firm in the country is going to run AI over its case files. Not some of them. All of them, within a few years, on whatever tooling their case management vendor ships.</p>
+    <p>And every one of those efforts runs into the same wall, which is the wall you already named publicly. The model is not the constraint. The data underneath it is. Records that arrived as scanned documents, with no structure, no provenance and no verifiable consent trail, produce output a firm cannot defend when it matters.</p>
+    <p class="claim">Marble is not competing with the firm's AI. Marble is the thing that makes the firm's AI defensible.</p>
+    <p>Consented, structured, provenance-tracked, auditable. That is the difference between a tool a firm experiments with and a system it is willing to make decisions on. It is also a much larger business than pre-qualification, because it attaches to every file rather than to the intake decision.</p>
+    <p>Commercially this matters because it changes who you are in the room. A records vendor gets compared on price and turnaround. A data foundation gets compared on whether the firm can operate without you. I would want that argument in the second meeting with every tier one firm on the list.</p>
+  </section>
+
+  <section id="completion" class="reveal">
+    <h2>The metric I would put on the board that probably is not there</h2>
+    <p>The firm buys it, but the firm's clients have to complete consent and identity verification. If completion rates are low, the value never materializes, the ROI story collapses and the renewal dies quietly a year later while everyone blames something else.</p>
+    <p>Completion rate is a commercial metric, not a support metric. It belongs to whoever owns revenue, measured per firm, watched from the first cohort, and treated as the leading indicator of whether that account renews and expands.</p>
+    <p>It is also the sharpest expansion trigger you have. A firm with high completion has already proven its clients will use the layer, which is the entire precondition for selling them the layer.</p>
+  </section>
+
+  <section id="surface" class="reveal">
+    <h2>The same problem, showing up on a second surface</h2>
+    <p>The argument above is that the motion sold the product instead of the layer, and talked past the buyer. That is not only true of the sales motion. It is on the homepage.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">The word is missing</div><p>The page title, the hero and the closing call to action all say health data. Authorization does not appear anywhere on the site, despite being what you told me the company actually is.</p></div>
+      <div class="row"><div class="tag">Legal is a quarter tile</div><p>Health, Legal, Insurance and Industries sit as four equal blocks, and all four link to the same use-cases page. That is a list rather than segmentation, and the market you described as primary has no page of its own.</p></div>
+      <div class="row"><div class="tag">The products are invisible</div><p>SettLiT and Medchart do not appear on the site at all. The things carrying revenue are absent from the company's own front door.</p></div>
+      <div class="row"><div class="tag">Wrong reader</div><p>Built by developers for developers, a code sample above the fold, a link to the API docs. Exactly right for a digital health engineering lead evaluating an integration. Nothing on that page is written for a managing partner deciding whether to put their clients' records through you.</p></div>
+      <div class="row"><div class="tag">Best assets buried</div><p>SOC 2 Type 2, DirectTrust full membership, HIPAA, AES-256. For a buyer handling protected client information those badges are the argument, not the footnote, and they sit at the bottom of the page.</p></div>
+    </div>
+    <p style="margin-top:1.8rem">The design dates to the 2022 rebrand and the privacy policy was updated this month, so the site is maintained. It has simply never been repositioned around where the business went.</p>
+    <p class="claim">Lead with legal. Do not go broad.</p>
+    <p>The horizontal story is true and it is not the buying story. An authorization layer for all regulated information is abstract, and abstraction is the one thing the current site is not guilty of. Stripe was a payments API for years before it was financial infrastructure, and that sequencing was the point. Put legal at the front, where the revenue and the mandate are, and let the horizontal thesis live one layer down in the architecture page and the deck, where the audience is investors and partners rather than buyers.</p>
+    <p>One caveat I would want answered before acting on any of this. If inbound API interest from digital health is still meaningful, the current site may be doing a job I cannot see from outside, and that would change the sequencing rather than the conclusion.</p>
+  </section>
+
+  <section id="marketing" class="reveal">
+    <h2>Marketing and sales on one system, measured on one thing</h2>
+    <p>Putting marketing and sales under one leader only works if marketing does not quietly become a lead desk for sales. That is the fear every marketer has about reporting into revenue, and in most companies it is justified, because the first thing a sales-led leader does is count MQLs.</p>
+    <p class="claim">In a market of a few hundred named firms, lead volume is close to a meaningless number.</p>
+    <p>What matters is whether the right firms are engaging, whether the right people inside them are, and how much of the pipeline marketing actually created or moved. Those are measurable, but only when marketing and sales work from the same system and the same record. On two systems, attribution is an argument. On one, it is a report.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Marketing owns</div><p>The message, the programs, the account-level plays, the front door, and the content buyers find before they ever speak to anyone. Most buyers now research through AI answer engines before identifying themselves, which makes what is findable and ungated a growth lever rather than a brand exercise.</p></div>
+      <div class="row"><div class="tag">Measured on</div><p>Named-account engagement, marketing-sourced and influenced pipeline, and revenue, with multi-touch attribution once the data supports it. Not form fills.</p></div>
+      <div class="row"><div class="tag">Sales owes marketing</div><p>A real feedback loop: which plays opened doors, which messages landed with managing partners, which signals turned into meetings. Credit flows both ways or the system breaks.</p></div>
+      <div class="row"><div class="tag">Agents help both</div><p>The same named list, the same signals and the same account brief drive the campaign and the conversation. The campaign agent and the rep are working the same firm with the same context.</p></div>
+    </div>
+
+    <h3 style="margin-top:2.6rem">The marketing stack, stage by stage</h3>
+    <p>The category has changed more in the last twelve months than in the previous five. This is how I would think about it for this business specifically, which is not the same as the standard B2B answer.</p>
+    <details class="more"><summary>Show the stack, stage by stage</summary>
+    <div class="rows">
+      <div class="row"><div class="tag">Found</div><p>Managing partners and case managers increasingly research by asking an AI answer engine rather than searching. AI visibility platforms like Profound show which prompts your buyers use and whether you appear in the answers. With a homepage that says health data, the likely answer for legal queries today is that you do not. This is the first thing I would measure. Nobody can guarantee placement in a model's answer, so the lasting lever is accurate, well-sourced, ungated material.</p></div>
+      <div class="row"><div class="tag">Targeted</div><p>The enterprise ABM suites are six-figure commitments whose intent data comes from people researching B2B software. Plaintiff firms do not research there. Your targeting signals are dockets, filings and advertising spend, which are built rather than bought. I would skip the suite.</p></div>
+      <div class="row"><div class="tag">Met</div><p>Your largest channel, and the one where you own the least data. It gets its own treatment below.</p></div>
+      <div class="row"><div class="tag">Reached</div><p>Paid budget pointed at the named list rather than at impressions. LinkedIn first, with AI answer engines now opening as an ad channel worth testing early while it is cheap.</p></div>
+      <div class="row"><div class="tag">Engaged</div><p>Campaign agents inside whichever platform you already run, working from the same list and signals as sales.</p></div>
+      <div class="row"><div class="tag">Converted</div><p>An intake agent on the site, personalization for named firms when they visit, and async demos the buyer can watch without booking anything. See below.</p></div>
+      <div class="row"><div class="tag">Measured</div><p>Attribution on the one shared record first. A dedicated attribution tool only when the data volume justifies it.</p></div>
+    </div>
+    </details>
+
+    <h3 style="margin-top:2.6rem">Async demos, and how you find the rest of the buying group</h3>
+    <p>Most of the buying happens before anyone talks to you, and a majority of buyers now say they would rather not involve a rep at all. A managing partner will not take a discovery call to find out whether this is worth their time. They will watch four minutes if it is about their firm, and only if it arrives without a calendar invite attached.</p>
+    <p>That is what demo automation is for, and the category has matured into standard practice rather than a novelty. A rep records a short framing of that firm's specific situation over a walkthrough, sends it in the follow-up, and the buyer watches it whenever they want. The newest versions go further: agents that navigate the product live and answer the viewer's questions as they go.</p>
+    <p class="claim">The tracking is the real reason to do it. You see who watched, what they watched, and who they forwarded it to.</p>
+    <p>That last part solves a problem the coverage model otherwise cannot. At a firm where you only know the managing partner, the forwarded demo is how the intake lead and the operations lead identify themselves, without you asking anyone for an org chart. Penetration becomes something you observe rather than something you guess at.</p>
+    <p>It also answers the objection this market actually has. In a survey of three hundred personal injury firms published by Morgan and Morgan with LawPro.AI, more than sixty percent had adopted or scaled AI tools, and half said their single biggest challenge was working out which tools were reliable. Adoption is not the barrier any more. Verification is. And the answer to a verification problem is letting a firm see it work rather than telling them it does.</p>
+
+    <h3 style="margin-top:2.6rem">Events, realistically</h3>
+    <p>You spend eight to ten weeks a year at shows and you had three teams at three events in one week, wishing your best people could be everywhere. That is your biggest channel, and the honest problem with it is that you do not own the data.</p>
+    <p>Every organizer controls its own attendee list and releases it to sponsors on its own terms and its own timeline. Sometimes it is late, sometimes partial, sometimes only after the show. Any plan that assumes you will know every target firm attending and book them in advance is a plan that will not survive contact with a real event calendar. So the model has to work with what is actually available.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Before</div><p>Prepare on what you can get rather than what you wish you had: the exhibitor and speaker lists, the agenda, the organizer's matchmaking app when there is one, your own invite list for the dinner, and the firms you already know attend every year. Those get a brief. Everything else is discovered on the floor.</p></div>
+      <div class="row"><div class="tag">During</div><p>Assume most meetings are set on site, in real time, by a rep standing in a hall. That means the brief has to be one message away on a phone, not printed the week before. This is where an agent in the work surface earns its keep: a rep meets a firm nobody expected, asks for the read, and has their docket and case volume before the coffee arrives.</p></div>
+      <div class="row"><div class="tag">Capture</div><p>Own one exhibitor-side capture tool and use it at every show, because the organizer's scanner changes from event to event and the fallback is always phone photos and a rented device. Badge scan, card, QR or a handwritten note, enriched and into the CRM in real time. Cvent's iCapture, Captello, Popl and Momencio are the current field. Some shows will force their own tool, which is exactly why you also keep your own.</p></div>
+      <div class="row"><div class="tag">After</div><p>The value dies in the gap between the handshake and the record. Vendors in this category claim the large majority of event leads never receive a follow-up at all, and the usual cause is a week of CSV cleanup. An agent drafting the follow-up from the capture and the rep's note, same day, closes that gap without adding work.</p></div>
+      <div class="row"><div class="tag">Measured</div><p>Named firms met, roles met, pipeline created and influenced per show. That is what makes an event budget defensible instead of traditional.</p></div>
+    </div>
+    <p style="margin-top:1.6rem">Run this way, events also become the easiest channel in the mix to attribute honestly. A badge scan is a timestamped, first-party record of a named person from a named firm at a known moment, tied to a rep and a conversation. Most digital attribution is inference stitched together from fragments. This is a record.</p>
+    <p>That matters more every year, not less. As buyers research through AI answer engines before they ever identify themselves, click-based tracking gets weaker and the channels that produce deterministic, consented records get more valuable. Which is a familiar argument in this building.</p>
+    <p style="margin-top:1.4rem">None of this needs your best person at every booth. It needs every person at every booth to walk up with what your best person would have known.</p>
+
+    <h3 style="margin-top:2.6rem">The report that only exists if both sides run on one system</h3>
+    <p>This is the real reason to put marketing and sales under one leader, and it is not about org charts. When both run on the same record you can see, per named firm and in close to real time, which accounts are active in which campaigns, which contacts inside them are engaging and which are not, and where your reps are actually spending their time.</p>
+    <p>Read those two things against each other and the diagnosis is immediate. Read either one alone and you are guessing.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">Engaged, not worked</div><p>A top firm is active across campaigns and rep activity on it is thin. The account is raising its hand and nobody is there. That is a sales gap, and it is the most expensive one because the hard part already happened.</p></div>
+      <div class="row"><div class="tag">Worked, wrong people</div><p>High engagement, high rep activity, but the activity sits on contacts who are not the ones engaging. That is a penetration problem. The rep has a relationship, just not with the person who decides.</p></div>
+      <div class="row"><div class="tag">Worked, not engaged</div><p>Heavy rep effort on a firm that ignores every campaign. Either the message is wrong for that segment or the firm does not belong on the list. Both are worth knowing before another quarter of effort goes into it.</p></div>
+      <div class="row"><div class="tag">Neither</div><p>A named firm with no engagement and no activity is not a mystery, it is an unworked account with an owner. It either gets worked or it comes off the list.</p></div>
+    </div>
+    <p style="margin-top:1.6rem">This is also what I mean by measuring reps on meaningful activity rather than volume. The question is never how many touches happened. It is whether the effort landed on the right people at the firms that are already showing interest. That is a fair number to hold someone to, and it is one they can actually influence.</p>
+  </section>
+
+  <section id="ninety" class="reveal">
+    <h2>The first ninety days, as a sequence</h2>
+    <p>This is deliberately a sequence rather than a plan, because a plan would require numbers I do not have yet.</p>
+    <ol class="steps">
+      <li>
+        <h3>Find out where deals actually die</h3>
+        <p>Every lost and stalled opportunity from the last four quarters, read rather than summarized. Not to audit anyone, but because the pattern in those files tells you whether this is a targeting problem, a pricing problem, a product problem or a motion problem. Those need four different fixes and only one of them is a sales fix.</p>
+      </li>
+      <li>
+        <h3>Build the named universe</h3>
+        <p>The actual list, tiered, owned, with the data behind the tiering visible. Until this exists there is no coverage to measure and no way to tell effort from progress.</p>
+      </li>
+      <li>
+        <h3>Prove the account brief on ten firms</h3>
+        <p>Assembled properly, by hand first so the template is right, then automated. Ten is enough to know whether it changes reply rates and enough to make the case internally if it does.</p>
+      </li>
+      <li>
+        <h3>Instrument what matters</h3>
+        <p>Coverage and progression against the named list. Completion rate per firm. Time from first contact to first case qualified. Retire call counts as a reported number and keep them only as a diagnostic.</p>
+      </li>
+      <li>
+        <h3>Get into the product conversation properly</h3>
+        <p>A standing channel from what firms say to what gets built. You said you want someone who works with product and engineering, and that only means something if the loop has a cadence and an owner rather than being goodwill between busy people.</p>
+      </li>
+      <li>
+        <h3>Then commit to a number</h3>
+        <p>Not before. A number committed on a motion nobody has validated is how the previous attempts probably started.</p>
+      </li>
+    </ol>
+  </section>
+  <section id="team" class="reveal">
+    <h2>How I would build the team, which is probably not what you expect</h2>
+    <p>The instinct at your stage is to hire reps, because reps are the thing that visibly produces pipeline. I would hire the infrastructure first and the headcount second, and I would want to be upfront about that before you hire me rather than after.</p>
+    <p class="claim">A second rep doubles the activity. The system multiplies every rep you ever hire, including the ones already here.</p>
+    <p>This is not just my opinion. Bessemer's recent work on AI-native executive hiring lands on the same conclusion across functions: in an AI-native go-to-market, the highest-leverage hire is the person who builds the revenue infrastructure rather than another quota carrier, and the thing CEOs should be evaluating in a leader is their ability to design an operating model rather than their fluency with any particular tool.</p>
+    <div class="rows">
+      <div class="row"><div class="tag">First</div><p>The system described above. Named universe, signal model, brief engine, the work surface, the record that maintains itself. Weeks, not quarters, and much of it built rather than bought.</p></div>
+      <div class="row"><div class="tag">Then</div><p>Reps into a motion that already works, with the research layer already carrying the preparation. A rep who joins a functioning system ramps on the conversation instead of on the spreadsheet.</p></div>
+      <div class="row"><div class="tag">Alongside</div><p>Whoever owns the completion side of B2B2C. Sales, customer success and product blur at that boundary, and treating it as three handoffs is how the value quietly fails to land. Bessemer names this convergence as one of the clearest structural shifts happening in go-to-market right now, and your business is a textbook case of it.</p></div>
+    </div>
+    <p style="margin-top:1.8rem">There is a version of this hire that shows up, builds an org chart, and manages from above the work. That is not what a company your size needs and it is not what I want. In a market of a few hundred firms where the buyer is the managing partner who owns the business, executive coverage on the top tier should be part of the design rather than something that happens when a deal is already in trouble. I would want direct sponsorship of those accounts myself, in the room, alongside the rep rather than instead of them.</p>
+    <p>What I would not do is carry a quota on top of it. Building the operating system, running go-to-market and working a strategic bag is three jobs, and the one that would quietly suffer is the first one, which is the reason you would be hiring for this in the first place.</p>
+    <p>The discipline I would hold myself to on the technology side: every use case gets an outcome modelled before it gets a budget, a cost tracked against it, and a decision rule for killing it. The fastest way to lose credibility on agentic anything is to evangelize it and never show the arithmetic. I have spent twelve years being measured in ratios, and I would rather bring that standard to this than the enthusiasm.</p>
+  </section>
+
+  <section id="open" class="reveal">
+    <h2>What I do not know</h2>
+    <p>Everything above is built from two conversations and public material. These are the gaps, and I would rather show them than fill them with guesses.</p>
+    <div class="open">
+      <ul>
+        <li>How revenue actually splits across SettLiT, Medchart and the API today, and which one you want the team leading with.</li>
+        <li>What the previous sales leaders got wrong, and what the company has not been willing to change.</li>
+        <li>How SettLiT came into the business, and what integration state it is in.</li>
+        <li>Where you are in the financing cycle, and whether this hire is tied to a round or to a revenue milestone.</li>
+        <li>What the team looks like today, and what you want it to look like in twelve months.</li>
+        <li>Actual completion rates on consent and identity verification, and whether anyone is watching them commercially.</li>
+        <li>What pricing looks like now, and whether it fits a buyer who thinks in cost per case.</li>
+        <li>What is already installed on the commercial side, what the budget you mentioned is sized for, and whether any case management integrations exist today.</li>
+        <li>Whether inbound API interest from digital health is still meaningful, which changes how fast the front door should be repositioned.</li>
+      </ul>
+    </div>
+    <p style="margin-top:1.6rem">The honest caveat on all of it: I have spent twelve years selling to committees, and the plaintiff bar is not a committee. The systems thinking transfers. The rhythm of that buyer is something I would be learning, and I would rather say so now than discover it in month three.</p>
+  </section>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="by">
+      <img src="data:image/jpeg;base64,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" alt="Chris Roberts">
+      <div>
+        <div class="n">Chris Roberts</div>
+        <div class="r">Toronto · 12 years at Salesforce, BDR to Director of Enterprise Sales</div>
+      </div>
+    </div>
+    <p class="disc">Prepared privately for James Bateman ahead of a scheduled conversation. This is an independent working point of view based on two conversations and publicly available material, and it does not reflect any confidential company information. Marble, Medchart and SettLiT are trademarks of their respective owner. This page is not affiliated with, authorized by, or endorsed by Marble, and the wordmark shown is a typeset placeholder rather than an official brand asset.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var bar = document.getElementById('bar');
+  function prog(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    bar.style.width = (p * 100) + '%';
+  }
+  window.addEventListener('scroll', prog, {passive:true});
+  window.addEventListener('resize', prog);
+  prog();
+
+  var b = document.getElementById('burger');
+  var d = document.getElementById('drop');
+  b.addEventListener('click', function(){
+    var open = d.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  Array.prototype.forEach.call(d.querySelectorAll('a'), function(a){
+    a.addEventListener('click', function(){
+      d.classList.remove('open');
+      b.setAttribute('aria-expanded','false');
+    });
+  });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(els, function(e){ e.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.05});
+    Array.prototype.forEach.call(els, function(e){ io.observe(e); });
+  }
+  var dets = document.querySelectorAll('details.more');
+  window.addEventListener('beforeprint', function(){
+    Array.prototype.forEach.call(dets, function(d){ d.dataset.was = d.open ? '1':'0'; d.open = true; });
+  });
+  window.addEventListener('afterprint', function(){
+    Array.prototype.forEach.call(dets, function(d){ d.open = d.dataset.was === '1'; });
+  });
+})();
+</script>
+</body>
+</html>
